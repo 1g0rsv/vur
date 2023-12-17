@@ -1,0 +1,29 @@
+package main
+
+import (
+	"crypto/rand"
+	"fmt"
+	"log"
+	"encoding/hex"
+)
+
+func main() {
+    hexKey := "02486b43dd1e356ccea3a755816958fa1a577a3d5a3d56ba0d4b3e77137baddb"
+    key, err := hex.DecodeString(hexKey)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    if len(key) != 32 { // Для AES-256 необходим 32-байтный ключ
+        log.Fatalf("Invalid key length: %d bytes (expected 32 bytes for AES-256)", len(key))
+    }
+
+func main() {
+	key := make([]byte, 32) // 32 байта для AES-256
+	if _, err := rand.Read(key); err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("Generated AES-256 Key: %x\n", key)
+	// Сохраните этот ключ в безопасном месте
+}

@@ -9,19 +9,27 @@ services:
       - "8080:8080"
     depends_on:
       - db
+    environment:
+      HEX_KEY: ${HEX_KEY}
+      VUR_USER: ${VUR_USER}
+      VUR_PASS: ${VUR_PASS}
+      VUR_DB: ${VUR_DB}
     networks:
-      - my-network
+       - backend
+       - frontend
 
   db:
     image: mysql
     container_name: my_vur_bd
     environment:
-      MYSQL_ROOT_PASSWORD: 12345678
-      MYSQL_DATABASE: mydb
+      MYSQL_ROOT_PASSWORD: ${VUR_PASS}
+      MYSQL_DATABASE: ${VUR_DB}
     ports:
       - "3306:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Прокидываем init.sql внутрь контейнера
     networks:
-      - my-network
+      - backend
 
   vue:
     build:
@@ -31,10 +39,12 @@ services:
     ports:
       - "8081:8081"
     networks:
-      - my-network
+      - frontend
 
 networks:
-  my-network:
+  backend:
+    driver: bridge
+  frontend:
     driver: bridge
 
 

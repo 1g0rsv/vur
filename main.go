@@ -12,6 +12,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
@@ -27,7 +28,7 @@ var aesKey []byte
 func main() {
 	// Преобразование шестнадцатеричного ключа в байты
 	var err error
-	hexKey := "02486b43dd1e356ccea3a755816958fa1a577a3d5a3d56ba0d4b3e77137baddb"
+	hexKey := os.Getenv("HEX_KEY")
 	aesKey, err = hex.DecodeString(hexKey)
 	if err != nil {
 		log.Fatal("Error decoding AES key:", err)
@@ -158,8 +159,16 @@ func getText(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Удаление записи после расшифровки
+	_, err = db.Exec("DELETE FROM texts WHERE uuid = ?", uuid)
+	if err != nil {
+		log.Printf("Error deleting text: %v", err)
+		http.Error(w, "Failed to delete text", http.StatusInternalServerError)
+		return
+	}
+
 	fmt.Fprint(w, decryptedText)
-	log.Println("Text sent successfully")
+	log.Printf("Text with UUID %s was read and deleted", uuid)
 	defer db.Close()
 }
 
@@ -171,10 +180,12 @@ func enableCors(w *http.ResponseWriter) {
 
 func dbConn() (db *sql.DB) {
 	dbDriver := "mysql"
-	dbUser := "root"
-	dbPass := "12345678"
-	dbName := "mydb"
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp(127.0.0.1)/"+dbName+"?parseTime=true")
+	dbUser := os.Getenv("VUR_USER")
+	dbPass := os.Getenv("VUR_PASS")
+	dbName := os.Getenv("VUR_DB")
+	// db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp(127.0.0.1)/"+dbName+"?parseTime=true")
+	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp(db)/"+dbName+"?parseTime=true")
+
 	if err != nil {
 		log.Printf("Error connecting to database: %v", err)
 		panic(err.Error())

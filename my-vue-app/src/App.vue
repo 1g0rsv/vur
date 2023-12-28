@@ -1,10 +1,14 @@
 <template>
-  <div id="app">
-    <input v-model="userText" placeholder="Введите текст">
-    <button @click="saveText">Save</button>
-    <!-- Элемент для отображения ссылки -->
-    <div v-if="link">
-      Поделитесь этой ссылкой: <a :href="link" target="_blank">{{ link }}</a>
+  <div id="app" class="container">
+    <div class="header">
+      <h1>VUR</h1>
+    </div>
+    <div class="input-group">
+      <input v-model="userText" placeholder="Введите текст" class="input-text">
+      <button @click="saveText" class="btn-encrypt">Encrypt</button>
+    </div>
+    <div v-if="link" class="share-link">
+      Поделитесь этой ссылкой: <a :href="link" target="_blank" class="link">{{ link }}</a>
     </div>
   </div>
 </template>
@@ -47,5 +51,60 @@ export default {
 </script>
 
 <style>
-/* Ваши стили */
+/* Стили для контейнера приложения */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(to bottom, #ADD8E6, #FFFFFF);
+}
+
+/* Стили для заголовка */
+.header {
+  margin-bottom: 20px;
+}
+
+/* Стили для группы ввода */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Стили для поля ввода */
+.input-text {
+  border: 2px solid #000;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 300px; /* Можно изменить по предпочтениям */
+}
+
+/* Стили для кнопки */
+.btn-encrypt {
+  background-color: #4CAF50; /* Зеленый */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Стили для ссылки */
+.link {
+  color: #0000EE;
+  text-decoration: none;
+}
+
+/* Стили для элемента отображения ссылки */
+.share-link {
+  margin-top: 20px;
+}
 </style>

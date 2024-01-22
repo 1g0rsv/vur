@@ -1,10 +1,34 @@
-**This project is of an educational nature, created for personal use and to learn about DevOps tools and technologies. **
+# **This project is of an educational nature, created for personal use and to learn about DevOps tools and technologies.**
 This application is a secure solution for encrypting, transferring, and temporarily storing sensitive data. Developed with Go for backend operations and Vue.js for the frontend interface, it ensures robust security for handling confidential information.
 
 Using the Advanced Encryption Standard (AES), the backend encrypts text data, managing all processes with unique UUIDs for each data entry. The frontend provides an intuitive interface for users to input and send text for encryption, returning a one-time access link to the decrypted data, enhancing data privacy.
 
 Deployed using Docker and managed with Docker Compose, the application components are isolated for efficient operation. Nginx acts as a reverse proxy, facilitating secure interactions between the frontend and backend.
 
+# **Key DevOps Features from the Docker Compose File:**
+
+**Containerization and Image Management:**
+
+The application uses Docker containers for each component (backend, frontend, database, and Nginx), specified with version-controlled images like igorsky888/vur:vur-app-v1.0.3 for the app service. This ensures consistent and replicable environments across development and production setups.
+The container names like my_vur_backend and my_vur_frontend indicate clear identification and management of each service.
+
+**Service Dependencies and Environment Variables:**
+
+The depends_on attribute ensures orderly startup by managing dependencies, like the app service depending on the database.
+Environment variables such as HEX_KEY, VUR_USER, VUR_PASS, and VUR_DB are used for secure and flexible configuration, promoting best practices in sensitive data management.
+
+**Persistent Storage and Logging:**
+
+The MySQL database service utilizes mounted volumes for data persistence (/root/vur/data) and logging (/root/vur/logs). This setup allows for data durability and simplified log management, crucial for long-term maintenance and debugging.
+
+**Network Configuration:**
+
+Defined backend and frontend networks in Docker Compose file ensure segregated and secure communication channels between different components of the application.
+Nginx is configured as a reverse proxy, facilitating efficient request handling and enhanced security.
+
+**GeoIP Integration with Nginx:**
+
+Custom Nginx image (igorsky888/vur:nginx-geoip-v1.0.0) includes GeoIP databases, indicating advanced traffic analysis and geolocation capabilities.
 
 Backend Technical Details (Go)
 **1 Encryption:**

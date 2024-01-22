@@ -35,7 +35,7 @@ services:
     build:
       context: ./my-vue-app
       dockerfile: Dockerfile
-    container_name: my_vur_frontendзцв
+    container_name: my_vur_frontend
     ports:
       - "8081:8081"
     networks:

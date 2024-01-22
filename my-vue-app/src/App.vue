@@ -1,14 +1,14 @@
 <template>
   <div id="app" class="container">
     <div class="header">
-      <h1>VUR</h1>
+      <h1>VUR v.1.0.1</h1>
     </div>
     <div class="input-group">
-      <input v-model="userText" placeholder="Введите текст" class="input-text">
+      <input v-model="userText" placeholder="imput text" class="input-text">
       <button @click="saveText" class="btn-encrypt">Encrypt</button>
     </div>
     <div v-if="link" class="share-link">
-      Поделитесь этой ссылкой: <a :href="link" target="_blank" class="link">{{ link }}</a>
+      Share to decrypt: <a :href="link" target="_blank" class="link">{{ link }}</a>
     </div>
   </div>
 </template>
@@ -22,30 +22,60 @@ export default {
     };
   },
   methods: {
+    // async saveText() {
+    //   try {
+    //     const response = await fetch('http://localhost:8080/save', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify({ text: this.userText }),
+    //     });
+
+    //     if (!response.ok) {
+    //       throw new Error(`HTTP error! status: ${response.status}`);
+    //     }
+
+    //     const data = await response.json(); // Предполагается, что сервер возвращает JSON объект с полем uuid
+    //     this.link = `http://localhost:8080/text/${data.uuid}`; // Формирование ссылки
+
+    //     console.log('Success:', data);
+    //     alert('Text saved successfully');
+    //   } catch (error) {
+    //     console.error('Error:', error);
+    //     alert('Failed to save text');
+    //   }
+    // }
     async saveText() {
-      try {
-        const response = await fetch('http://localhost:8080/save', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ text: this.userText }),
-        });
+  try {
+    const response = await fetch('http://65.109.8.6/save', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: this.userText }),
+    });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json(); // Предполагается, что сервер возвращает JSON объект с полем uuid
-        this.link = `http://localhost:8080/text/${data.uuid}`; // Формирование ссылки
-
-        console.log('Success:', data);
-        alert('Text saved successfully');
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Failed to save text');
-      }
+    if (!response.ok) {
+      // Выводим подробности об ошибке для дальнейшего анализа
+      console.error(`HTTP error! status: ${response.status}, statusText: ${response.statusText}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    const data = await response.json();
+    if (!data.uuid) {
+      throw new Error('No UUID in response');
+    }
+
+    this.link = `http://65.109.8.6/text/${data.uuid}`;
+    console.log('Success:', data);
+    alert('Text saved successfully');
+  } catch (error) {
+    console.error('Error:', error);
+    alert('Failed to save text');
+  }
+}
+
   }
 }
 </script>
@@ -75,7 +105,7 @@ export default {
 
 /* Стили для поля ввода */
 .input-text {
-  border: 2px solid #000;
+  border: 1px solid #000;
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
@@ -91,7 +121,7 @@ export default {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 18px;
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 5px;
